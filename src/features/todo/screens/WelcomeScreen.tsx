@@ -1,19 +1,35 @@
-import { router } from "expo-router";
+import { useAuth } from "@/features/shared/hooks/useAuth";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function WelcomeScreen() {
+  const { login, isLoggingIn } = useAuth();
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  async function handleLogin() {
+    setLoginError(null);
+    try {
+      await login();
+    } catch {
+      setLoginError("登录状态保存失败，请重试。");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Welcome</Text>
       <Text style={styles.description}>欢迎使用待办应用，开始安排今天的任务吧。</Text>
-      <Pressable style={styles.button} onPress={() => router.push("./calendar")}>
-        <Text style={styles.buttonText}>查看待办</Text>
+      <Pressable accessibilityRole="button" disabled={isLoggingIn} style={[styles.button, isLoggingIn && styles.disabled]} onPress={() => { void handleLogin(); }}>
+        <Text style={styles.buttonText}>{isLoggingIn ? "登录中…" : "登陆"}</Text>
       </Pressable>
+      {loginError && <Text accessibilityRole="alert" style={styles.error}>{loginError}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  disabled: { opacity: 0.5 },
+  error: { color: "#B91C1C" },
   container: {
     flex: 1,
     backgroundColor: "#F3F4F6",
