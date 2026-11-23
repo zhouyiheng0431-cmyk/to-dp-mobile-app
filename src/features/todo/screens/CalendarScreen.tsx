@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { LoadingIndicator } from "@/features/shared/components/LoadingIndicator";
+import { useAuth } from "@/features/shared/hooks/useAuth";
 import { AddTodoModal } from "@/features/todo/components/AddTodoModal";
 import { TodoCard } from "@/features/todo/components/TodoCard";
 import type { Todo } from "@/features/todo/models/todo";
@@ -12,6 +13,8 @@ const filters = ["All", "Active", "Completed"] as const;
 type Filter = (typeof filters)[number];
 
 export default function CalendarScreen() {
+  const { logout, isLoggingOut } = useAuth();
+  const [logoutError, setLogoutError] = useState<string | null>(null);
   const { data: todos = [], isPending: loading, error, refetch } = useTodos();
   const { addMutation, toggleMutation, deleteMutation } = useTodoMutations();
   const [showAddModal, setShowAddModal] = useState(false);
@@ -32,9 +35,22 @@ export default function CalendarScreen() {
     await deleteMutation.mutateAsync(id);
   }
 
+  async function handleLogout() {
+    setLogoutError(null);
+    try {
+      await logout();
+    } catch {
+      setLogoutError("退出登录失败，请重试。");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>待办事项</Text>
+      <Pressable accessibilityRole="button" disabled={isLoggingOut} style={[styles.logoutButton, isLoggingOut && styles.disabled]} onPress={() => { void handleLogout(); }}>
+        <Text style={styles.filterText}>{isLoggingOut ? "退出中…" : "Logout"}</Text>
+      </Pressable>
+      {logoutError && <Text accessibilityRole="alert" style={styles.error}>{logoutError}</Text>}
       <Pressable accessibilityRole="button" disabled={loading || !!error} style={[styles.addButton, (loading || !!error) && styles.disabled]} onPress={() => setShowAddModal(true)}>
         <Text style={styles.addButtonText}>Add Todo</Text>
       </Pressable>
@@ -75,6 +91,7 @@ export default function CalendarScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoutButton: { minHeight: 44, paddingHorizontal: 16, justifyContent: "center", alignSelf: "flex-end", borderRadius: 8, backgroundColor: "#E5E7EB" },
   container: {
     flex: 1,
     backgroundColor: "#F3F4F6",
