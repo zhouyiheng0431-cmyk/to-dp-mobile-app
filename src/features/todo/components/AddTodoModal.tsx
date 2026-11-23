@@ -5,7 +5,7 @@ import {
   StyleSheet, Text, TextInput, View,
 } from "react-native";
 
-import { todoFormSchema, type TodoFormValues } from "@/schemas/todo";
+import { todoFormSchema, type TodoFormValues } from "@/features/todo/models/todoForm";
 
 type Props = {
   onClose: () => void;
