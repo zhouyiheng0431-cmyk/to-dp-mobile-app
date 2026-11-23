@@ -1,29 +1,13 @@
 import { router } from "expo-router";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function Index() {
-  const [items, setItems] = useState<string[]>([
-    "学习 React Native",
-    "练习 Expo",
-    "散步十分钟",
-  ]);
-
-  function addItem() {
-    setItems((currentItems) => [...currentItems, `新待办 ${currentItems.length + 1}`]);
-  }
-
+export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>代办任务</Text>
-      {items.map((item, index) => (
-        <Text key={index} style={styles.item}>{item}</Text>
-      ))}
-      <Pressable style={styles.button} onPress={addItem}>
-        <Text style={styles.buttonText}>添加待办</Text>
-      </Pressable>
-      <Pressable style={styles.button} onPress={() => router.push("./about")}>
-        <Text style={styles.buttonText}>关于这个应用</Text>
+      <Text style={styles.heading}>Welcome</Text>
+      <Text style={styles.description}>欢迎使用待办应用，开始安排今天的任务吧。</Text>
+      <Pressable style={styles.button} onPress={() => router.push("./calendar")}>
+        <Text style={styles.buttonText}>查看待办</Text>
       </Pressable>
     </View>
   );
@@ -35,6 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F4F6",
     padding: 24,
     gap: 12,
+    justifyContent: "center",
   },
   heading: {
     fontSize: 28,
@@ -42,12 +27,10 @@ const styles = StyleSheet.create({
     color: "#111827",
     marginBottom: 12,
   },
-  item: {
+  description: {
     fontSize: 18,
     color: "#374151",
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
+    lineHeight: 28,
   },
   button: {
     backgroundColor: "#2563EB",
