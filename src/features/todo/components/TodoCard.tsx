@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import type { Todo } from "@/types/todo";
+import type { Todo } from "@/features/todo/models/todo";
 
 type Props = {
   todo: Todo;

@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-import type { Todo } from "@/types/todo";
+import type { Todo } from "@/features/todo/models/todo";
 
 const devHost = Constants.expoConfig?.hostUri?.split(":")[0];
 const fallbackHost = Platform.OS === "android" ? "10.0.2.2" : "localhost";
